@@ -1,0 +1,48 @@
+name: malabis_app
+description: "A new Flutter project."
+
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  #Font Import
+  font_awesome_flutter: ^10.8.0
+
+  #State Provider
+  get:
+  carousel_slider: ^5.0.0
+  flutter_riverpod: ^2.6.1
+  flutter_bloc: ^9.1.0
+  fluttertoast: ^8.2.12
+  graphql_flutter: ^5.1.2
+  shared_preferences: ^2.5.2
+  pin_code_fields: ^8.0.1
+  google_fonts: ^4.0.4
+  connectivity_plus: ^6.1.3
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.14.3
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "lib/assets/images/MalabisLogo.png"
+  adaptive_icon_foreground: "lib/assets/images/MalabisLogo.png"
+
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - lib/assets/images/
+    - lib/assets/images/splash_logo.png
