@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:malabis_app/data/model/product_model.dart.dart';
+import 'package:malabis_app/data/repository/product_wishlist_repository.dart';
 import 'package:malabis_app/logic/whishlist/whishlistcubit.dart';
 import 'package:malabis_app/views/bottom_navbar.dart';
-import 'package:malabis_app/views/home/home_page.dart'; // If ProductCard is here
+import 'package:malabis_app/views/home/home_page.dart'; // Where ProductCard is defined
 
 class WishlistScreen extends StatelessWidget {
-  const WishlistScreen({super.key});
+  WishlistScreen({super.key});
+
+  // ✅ Create a repository instance
+  final ProductRepository _repository = ProductRepository();
+
+  // ✅ Method to fetch product by ID
+  Future<Product> fetchProductById(int productId) async {
+    return await _repository.fetchProductById(productId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +23,12 @@ class WishlistScreen extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Wishlist', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black)),
+        title: const Text(
+          'Wishlist',
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete_forever, color: Colors.white, size: 30),
@@ -34,21 +44,21 @@ class WishlistScreen extends StatelessWidget {
         builder: (context, wishlist) {
           if (wishlist.isEmpty) {
             return const Center(
-              child: Text('No products in the wishlist',
+              child: Text(
+                'No products in the wishlist',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.yellow),
               ),
             );
           }
 
-          // Limit the number of products shown at once for testing
-          final limitedWishlist = wishlist.take(20).toList(); // Show only the first 20
+          final limitedWishlist = wishlist.take(20).toList();
 
           return ListView.builder(
             itemCount: limitedWishlist.length,
             itemBuilder: (context, index) {
               final productId = limitedWishlist[index];
 
-              return SizedBox( // ✅ Ensures layout safety
+              return SizedBox(
                 height: 160,
                 child: FutureBuilder<Product>(
                   future: fetchProductById(productId),
@@ -70,20 +80,6 @@ class WishlistScreen extends StatelessWidget {
         },
       ),
       bottomNavigationBar: BottomNavigationWidget(),
-    );
-  }
-
-  Future<Product> fetchProductById(int productId) async {
-    // Replace this with actual product fetching logic
-    return Product(
-      id: productId,
-      name: "Sample Product",
-      price: 100,
-      discountedPrice: 90.0,
-      images: [],
-      stockStatus: 'In Stock',
-      description: 'Sample description',
-      categories: [],
     );
   }
 }

@@ -21,8 +21,8 @@ class InvoiceScreen extends StatelessWidget {
       double totalPrice = (item.price ?? 0) * item.quantity;
       subtotal += totalPrice;
 
-      if (item.discountedPrice != null && item.discountedPrice! > 0) {
-        discountTotal += (item.price - item.discountedPrice!) * item.quantity;
+      if (item.discountedPrice > 0) {
+        discountTotal += (item.price - item.discountedPrice) * item.quantity;
       }
     }
 

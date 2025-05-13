@@ -24,9 +24,9 @@ class BottomNavigationWidget extends ConsumerWidget {
       
     //final user = ref.watch(AuthAuthenticated as ProviderListenable); // Listen to auth state changes
 
-    return SimpleNavigationBar(
-      backgroundColor: const Color(0xFFC58900), // Background behind the bar
-      color: const Color(0xFF2F4568), // Nav bar color
+    return CurvedNavigationBar(
+      backgroundColor: Colors.black, // Background behind the bar
+      color: const Color(0xFFC58900), // Nav bar color
       //buttonBackgroundColor: const Color.fromARGB(88, 0, 0, 0), // Active icon background
       animationDuration: const Duration(minutes: 5), // Smooth animation
       index: selectedIndex, // Set selected tab
@@ -38,7 +38,7 @@ class BottomNavigationWidget extends ConsumerWidget {
           Icons.home,
           size: 30,
           color: selectedIndex == 0
-              ? Colors.amber
+              ? Colors.white
               : Colors.black, // Active: Black, Inactive: White
         ),
         Icon(

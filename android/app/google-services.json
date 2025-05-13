@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "330936671582-c12ffnda9mltbo6houdl3edak0evte8q.apps.googleusercontent.com",
+          "client_id": "330936671582-n86adqlhkeitpvtapmuvva40qec2qmr9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.malabis_app",
-            "certificate_hash": "bea560e77087a747486cc500462c724fbdb65d00"
+            "certificate_hash": "d4499bea95a95be578cb0eba0bde02222b6f1f93"
           }
         },
         {
