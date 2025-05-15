@@ -24,6 +24,7 @@ import 'package:malabis_app/routes/custom_routes.dart';
 import 'package:malabis_app/views/account/accounts.dart';
 import 'package:malabis_app/views/cart/cart.dart';
 import 'package:malabis_app/views/home/home_page.dart';
+import 'package:malabis_app/views/home/notification.dart';
 import 'package:malabis_app/views/order/order_history.dart';
 import 'package:malabis_app/views/splash_screen.dart';
 import 'package:malabis_app/views/wishlist/wishlistscreen.dart';
@@ -31,6 +32,8 @@ import 'package:malabis_app/views/wishlist/wishlistscreen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  await PushNotificationService().initialize();
 
   Dio dio = Dio(); // If needed for API calls
 

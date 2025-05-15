@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,8 +5,6 @@ import 'package:malabis_app/logic/authentication/authentication_cubit.dart';
 import 'package:malabis_app/logic/authentication/authentication_state.dart';
 import 'package:malabis_app/logic/navigation/navigation_cubit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-
 
 class BottomNavigationWidget extends ConsumerWidget {
   const BottomNavigationWidget({super.key});
@@ -19,57 +16,68 @@ class BottomNavigationWidget extends ConsumerWidget {
       builder: (context, state) {
         User? user;
         if (state is AuthAuthenticated) {
-          user = state.user;  // Get the authenticated user
+          user = state.user;
         }
-      
-    //final user = ref.watch(AuthAuthenticated as ProviderListenable); // Listen to auth state changes
 
-    return CurvedNavigationBar(
-      backgroundColor: Colors.black, // Background behind the bar
-      color: const Color(0xFFC58900), // Nav bar color
-      //buttonBackgroundColor: const Color.fromARGB(88, 0, 0, 0), // Active icon background
-      animationDuration: const Duration(minutes: 5), // Smooth animation
-      index: selectedIndex, // Set selected tab
-      onTap: (index) {
-        ref.read(bottomNavProvider.notifier).setIndex(index, context);
+        return Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFF2E323D),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10,
+              )
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+            child: BottomNavigationBar(
+              backgroundColor: Color(0xFF2E323D),
+              selectedItemColor: Colors.white,
+              unselectedItemColor: const Color.fromARGB(174, 252, 252, 252),
+              currentIndex: selectedIndex,
+              type: BottomNavigationBarType.fixed,
+              onTap: (index) {
+                ref.read(bottomNavProvider.notifier).setIndex(index, context);
+              },
+              items: [
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: "Home",
+                ),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.shopping_cart),
+                  label: "Cart",
+                ),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.favorite),
+                  label: 'Favorites',
+                ),
+                const BottomNavigationBarItem(
+                  icon: Icon(Icons.add_box_outlined),
+                  label: 'OrderHistory',
+                ),
+                BottomNavigationBarItem(
+                  icon: user != null && user.photoURL != null
+                      ? CircleAvatar(
+                          backgroundImage: NetworkImage(user.photoURL!),
+                          radius: 12,
+                        )
+                      : const Icon(Icons.account_circle),
+                  label: '',
+                ),
+              ],
+            ),
+          ),
+        );
       },
-      items: [
-        Icon(
-          Icons.home,
-          size: 30,
-          color: selectedIndex == 0
-              ? Colors.white
-              : Colors.black, // Active: Black, Inactive: White
-        ),
-        Icon(
-          Icons.shopping_cart,
-          size: 30,
-          color: selectedIndex == 1
-              ? Colors.amber
-              : Colors.black, // Active: Black, Inactive: White
-        ),
-        Icon(
-          Icons.favorite,
-          size: 30,
-          color: selectedIndex == 2
-              ? Colors.amber
-              : Colors.black, // Active: Black, Inactive: White
-        ),
-        Icon(
-          Icons.add_box_outlined,
-          size: 30,
-          color: selectedIndex == 3
-              ? Colors.amber
-              : Colors.black, // Active: Black, Inactive: White
-        ),
-             user != null && user.photoURL != null
-                ? CircleAvatar(
-                    backgroundImage: NetworkImage(user.photoURL!),
-                    radius: 15,
-                  )
-                : Icon(Icons.account_circle, size: 30),
-      ],
     );
-  });
   }
 }

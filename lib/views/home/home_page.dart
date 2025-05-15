@@ -18,14 +18,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-    final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    // Only if HomeCubit is not initialized elsewhere
-    // context.read<HomeCubit>().loadInitialProducts();
   }
 
   void _onScroll() {
@@ -37,33 +37,16 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFC58900), // Set AppBar color to C58900
-        title: Padding(
-          padding: const EdgeInsets.fromLTRB(0,20,0,30), // Adjust for better position
-          child: TextField(
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.grey[200],
-              hintText: 'Search products...',
-              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(30),
-                borderSide: BorderSide.none,
-              ),
-              hintStyle: const TextStyle(color: Colors.grey),
-            ),
-            style: const TextStyle(color: Colors.black),
-            onChanged: (query) {
-              // Search logic
-            },
-          ),
-        ),
+        backgroundColor: const Color(0xFF2E323D),
+        title: Center(child: const Text('Home Page', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white,),)),
         actions: [
           IconButton(
             icon: const Icon(Icons.shopping_cart, size: 30.0, color: Colors.white),
@@ -73,7 +56,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-       // Space between AppBar and CarouselSlider
       body: BlocBuilder<HomeCubit, HomeState>(
         builder: (context, state) {
           if (state is HomeLoading) {
@@ -83,61 +65,107 @@ class _HomePageState extends State<HomePage> {
             return Center(child: Text(state.message));
           }
           if (state is HomeLoaded) {
-            final products = state.products;
-            
+            final allProducts = state.products;
+            final products = _searchQuery.isEmpty
+                ? allProducts
+                : allProducts
+                    .where((product) =>
+                        product.name.toLowerCase().contains(_searchQuery))
+                    .toList();
 
             return CustomScrollView(
               controller: _scrollController,
               slivers: [
-                // CarouselSlider after AppBar
+                // Search bar
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: CarouselSlider(
-                      options: CarouselOptions(
-                        height: 200,
-                        autoPlay: true,
-                        enlargeCenterPage: true,
-                        viewportFraction: 0.9,
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        hintText: 'Search products...',
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                        hintStyle: const TextStyle(color: Colors.grey),
                       ),
-                      items: products.take(3).map((product) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            product.images.isNotEmpty ? product.images.first.src : '',
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Center(child: Icon(Icons.broken_image)),
-                          ),
-                        );
-                      }).toList(),
+                      style: const TextStyle(color: Colors.black),
+                      onChanged: (query) {
+                        setState(() {
+                          _searchQuery = query.trim().toLowerCase();
+                        });
+                      },
                     ),
                   ),
                 ),
 
-                // Sliver Grid for Products
-                SliverPadding(
-                  padding: const EdgeInsets.all(8.0),
-                  sliver: SliverGrid(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                      childAspectRatio: 0.7,
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final product = products[index];
-                        return ProductCard(product: product);
-                      },
-                      childCount: products.length,
+                // Carousel
+                if (products.isNotEmpty)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          height: 200,
+                          autoPlay: true,
+                          enlargeCenterPage: true,
+                          viewportFraction: 0.9,
+                        ),
+                        items: products.take(3).map((product) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              product.images.isNotEmpty ? product.images.first.src : '',
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  const Center(child: Icon(Icons.broken_image)),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
+
+                // Product Grid
+                SliverPadding(
+                  padding: const EdgeInsets.all(8.0),
+                  sliver: products.isNotEmpty
+                      ? SliverGrid(
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 0.7,
+                          ),
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final product = products[index];
+                              return ProductCard(product: product);
+                            },
+                            childCount: products.length,
+                          ),
+                        )
+                      : SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Center(
+                              child: Text(
+                                'No products match your search.',
+                                style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                              ),
+                            ),
+                          ),
+                        ),
                 ),
               ],
             );
           }
+
           return const Center(child: Text('No products available'));
         },
       ),
@@ -237,13 +265,13 @@ class ProductCard extends StatelessWidget {
                                 child: Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
-                                    color: isInCart ? Colors.red : Colors.yellow,
+                                    color: isInCart ? Colors.red : Color(0xFF2E323D),
                                     shape: BoxShape.circle,
                                   ),
                                   child: Icon(
                                     isInCart ? Icons.remove_shopping_cart : Icons.shopping_cart,
                                     size: 20,
-                                    color: Colors.black,
+                                    color: Colors.white,
                                   ),
                                 ),
                               );

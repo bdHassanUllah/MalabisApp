@@ -27,16 +27,16 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         title: const Text(
           'Order History Screen',
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
+          style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        backgroundColor: const Color(0xFFC58900),
+        backgroundColor: const Color(0xFF2E323D),
       ),
       body: BlocBuilder<OrderFetchCubit, OrderPlaceState>(
         builder: (context, state) {

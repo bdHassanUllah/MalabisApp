@@ -15,15 +15,15 @@ class CartScreen extends StatelessWidget {
       backgroundColor:  Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFFC58900),
+        backgroundColor: const Color(0xFF2E323D),
         elevation: 0,
-        title: const Text("My Cart", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black)),
+        title: const Text("My Cart", style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white)),
         centerTitle: false,
       ),
       body: cartItems.isEmpty

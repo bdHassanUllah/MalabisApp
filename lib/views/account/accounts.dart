@@ -18,9 +18,9 @@ class AccountsScreen extends StatelessWidget {
             if (state is AuthAuthenticated) {
               final user = state.user;
               return AppBar(
-                backgroundColor: const Color(0xFFC58900),
+                backgroundColor: const Color(0xFF2E323D),
                 leading: IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.black),
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -30,7 +30,7 @@ class AccountsScreen extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
                 actions: [
